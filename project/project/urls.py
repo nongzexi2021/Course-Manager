@@ -24,6 +24,7 @@ urlpatterns = [
     path('profile', views.profilePage),
     path('billing', views.billingPage),
     path('list', views.courseList),
+    path('enroll', views.listAllCourseSql),
     path('advisorList', views.listAdvisorSql),
     path('admin/course', views.adminCourse),
     path('admin/home', views.adminHome),

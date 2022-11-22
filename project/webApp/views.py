@@ -1,12 +1,6 @@
 from django.shortcuts import render
 
 # Create your views here.
-from .models import Employee
-from .models import Orders
-from decimal import Decimal
-
-from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db import connection
 
 
@@ -24,6 +18,9 @@ def billingPage(request):
 
 def courseList(request):
     return render(request, 'courseList.html')
+
+def enrollCourse(request):
+    return render(request, 'enrollPage.html')
 
 def adminCourse(request):
     return render(request, 'admin_course.html')
@@ -54,5 +51,13 @@ def listAdvisorSql(request):
     context = {
         "data" : rows
     }
-
     return render(request, 'advisorList.html', context)
+
+def listAllCourseSql(request):
+    cursor = connection.cursor();
+    cursor.execute('select * from COURSE')
+    rows = cursor.fetchall()
+    context = {
+        "data" : rows
+    }
+    return render(request, 'enrollPage.html', context)

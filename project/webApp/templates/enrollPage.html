@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block enroll %}
+{% include "navbar.html" %}
+<header>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'enrollPage.css'%}">
+</header>
+<div class="container">
+<div class="col-12 col-sm-12 col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h4>Enroll Class</h4>
+        </div>
+        <div class="card-body">
+          <div class="media-list position-relative">
+            <div class="table-responsive" id="project-team-scroll" tabindex="1" style="height: 400px; overflow: hidden; outline: none;">
+              <table class="table table-hover table-xl mb-0">
+                <thead>
+                  <tr>
+                    <th>Course Name</th>
+                    <th>Start Date</th>
+                    <th>Duration</th>
+                    <th>Room</th>
+                    <th>Credit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for class in data %}
+                  <tr>
+                    <td class="text-truncate">{{class.1}}</td>
+                    <td class="text-truncate">Start Date: {{class.3}} </td>
+                    <td class="text-truncate">Duration: {{class.4}} hours</td>
+                    <td class="text-truncate">Room number: {{class.5}}</td>
+                    <td class="text-truncate">Credits: {{class.7}}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
