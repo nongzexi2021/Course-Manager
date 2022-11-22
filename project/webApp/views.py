@@ -31,3 +31,12 @@ def adminProfile(request):
 
 def adminUsers(request):
     return render(request, 'admin_users.html')
+
+def advisorStudents(request):
+    return render(request, 'advisor_students.html')
+
+def advisorHome(request):
+    return render(request, 'advisor_home.html')
+
+def advisorProfile(request):
+    return render(request, 'advisor_profile.html')
