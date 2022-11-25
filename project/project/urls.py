@@ -33,4 +33,9 @@ urlpatterns = [
     path('advisor/profile', views.advisorProfile),
     path('advisor/student', views.advisorStudents),
     path('advisor/home', views.advisorHome),
+    path('admin/create', views.adminCourseCreate),
+    path('admin/inserted', views.adminCourseAddProcess),
+    path('admin/course/delete/<int:id>', views.adminCourseDeleteProcess),
+    path('admin/<int:id>', views.adminCourseEdit),
+    path('admin/course/edit/update', views.adminCourseUpadate)
 ]

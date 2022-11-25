@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block enroll %}
-{% include "navbar.html" %}
+{% include "admin_navbar.html" %}
 <header>
   {% load static %}
   <link rel="stylesheet" href="{% static 'enrollPage.css'%}">
@@ -10,7 +10,18 @@
 <div class="col-12 col-sm-12 col-md-12">
       <div class="card">
         <div class="card-header">
-          <h4>Enroll Class</h4>
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                 <h4>Course Management System</h4>
+              </div>
+              <div class="col">
+              </div>
+              <div class="col text-right">
+                <a class="btn btn-primary" href="create" role="button">Add Class</a>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="card-body">
           <div class="media-list position-relative">
@@ -23,16 +34,26 @@
                     <th>Duration</th>
                     <th>Room</th>
                     <th>Credit</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for class in data %}
                   <tr>
+<!--                    course name-->
                     <td class="text-truncate">{{class.1}}</td>
-                    <td class="text-truncate">Start Date: {{class.3}} </td>
-                    <td class="text-truncate">Duration: {{class.4}} hours</td>
-                    <td class="text-truncate">Room number: {{class.5}}</td>
-                    <td class="text-truncate">Credits: {{class.7}}</td>
+<!--                    start date-->
+                    <td class="text-truncate">{{class.3}} </td>
+<!--                    duration-->
+                    <td class="text-truncate">{{class.4}} hours</td>
+<!--                    room number-->
+                    <td class="text-truncate">{{class.5}}</td>
+<!--                    credits-->
+                    <td class="text-truncate">{{class.7}}</td>
+                    <td>
+                       <a href = '{{class.0}}'><i class="fa-solid fa-pen-to-square"></i></a>
+                       <a href = 'course/delete/{{class.0}}'><i class="fa-solid fa-trash"></i></a>
+                    </td>
                   </tr>
                 {% endfor %}
                 </tbody>
