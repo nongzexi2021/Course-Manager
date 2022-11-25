@@ -153,3 +153,13 @@ def adminCourseUpadate(request):
         return redirect(adminCourse)
     else:
         return redirect(adminCourse)
+
+
+def listUserSql(request):
+    cursor = connection.cursor();
+    cursor.execute('select * from USER')
+    rows = cursor.fetchall()
+    context = {
+        "data": rows
+    }
+    return render(request, 'admin_users.html', context)
