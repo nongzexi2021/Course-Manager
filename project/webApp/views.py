@@ -110,9 +110,9 @@ def adminCourseAddProcess(request):
         val = (courseName, proID, start_date, duration, room_id, college_id, credit)
         cursor.execute(sql, val)
         mydb.commit()
-        return redirect(adminCourseCreate)
+        return redirect(adminCourse)
     else:
-        return redirect(adminCourseCreate)
+        return redirect(adminCourse)
 
 
 def adminCourseDeleteProcess(request, id):
