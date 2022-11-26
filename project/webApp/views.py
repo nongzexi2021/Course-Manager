@@ -156,9 +156,10 @@ def adminCourseUpadate(request):
 
 
 def listUserSql(request):
-    cursor = connection.cursor();
+    cursor = connection.cursor()
     cursor.execute('select * from USER')
     rows = cursor.fetchall()
+    print(rows)
     context = {
         "data": rows
     }

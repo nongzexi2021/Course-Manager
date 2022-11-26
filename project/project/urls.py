@@ -29,7 +29,6 @@ urlpatterns = [
     path('admin/course', views.adminCourse),
     path('admin/home', views.adminHome),
     path('admin/profile', views.adminProfile),
-    path('admin/users', views.adminUsers),
     path('advisor/profile', views.advisorProfile),
     path('advisor/student', views.advisorStudents),
     path('advisor/home', views.advisorHome),
@@ -37,5 +36,6 @@ urlpatterns = [
     path('admin/inserted', views.adminCourseAddProcess),
     path('admin/course/delete/<int:id>', views.adminCourseDeleteProcess),
     path('admin/<int:id>', views.adminCourseEdit),
-    path('admin/course/edit/update', views.adminCourseUpadate)
+    path('admin/course/edit/update', views.adminCourseUpadate),
+    path('admin/users', views.listUserSql)
 ]
