@@ -2,7 +2,6 @@
 
 
 {% block list %}
-{% include "admin_navbar.html" %}
 <header>
   {% load static %}
     <link rel="stylesheet" href="{% static 'addCourse.css'%}">
@@ -25,7 +24,7 @@
       <div class="col-md-9 personal-info">
         <h3>Class info</h3>
 
-        <form method = "POST" action="update" class="form-horizontal" role="form">
+        <form method = "POST" action="update/{{data.0}}" class="form-horizontal" role="form">
           {% csrf_token %}
           <div class="form-group">
             <label class="col-lg-3 control-label">Class Name</label>
@@ -86,7 +85,8 @@
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+          <a href="/admin/users" class="btn btn-primary btn-sm">Back</a>
         </form>
       </div>
   </div>

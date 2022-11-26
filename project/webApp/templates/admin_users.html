@@ -21,7 +21,7 @@
         <div class="col">
         </div>
         <div class="col text-right">
-            <a class="btn btn-primary" href="create" role="button">Add User</a>
+            <a class="btn btn-primary" href="users/create" role="button">Add User</a>
         </div>
     </div>
     <div class="row">
@@ -43,7 +43,7 @@
                         <tr>
                             <td>
                                 <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
-                                <a href="#" class="user-link">{{user.4}} {{user.5}}</a>
+                                <a href="#" class="user-link">{{user.3}}</a>
                                 <span class="user-subhead">{{user.6}}</span>
                             </td>
                             <td class="text-center">
@@ -56,13 +56,13 @@
                                 <span class="label label-default">{{user.9}}</span>
                             </td>
                             <td class="text-center" style="width: 20%;">
-                                <a href="#" class="table-link">
+                                <a href="users/{{user.0}}" class="table-link">
 									<span class="fa-stack">
 										<i class="fa fa-square fa-stack-2x"></i>
 										<i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
 									</span>
                                 </a>
-                                <a href="#" class="table-link danger">
+                                <a href="users/delete/{{user.0}}" class="table-link danger">
 									<span class="fa-stack">
 										<i class="fa fa-square fa-stack-2x"></i>
 										<i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>

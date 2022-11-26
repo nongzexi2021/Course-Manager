@@ -74,7 +74,7 @@ def advisorProfile(request):
 # list all advisor
 def listAdvisorSql(request):
     cursor = connection.cursor();
-    cursor.execute('select * from ADVISOR')
+    cursor.execute('select * from USER where role="advisor"')
     rows = cursor.fetchall()
     context = {
         "data": rows
@@ -132,11 +132,9 @@ def adminCourseEdit(request, id):
     return render(request, "edit.html", context)
 
 
-def adminCourseUpadate(request):
+def adminCourseUpadate(request, id):
     cursor = connection.cursor();
     if request.method == 'POST':
-        id = request.POST['id']
-        print(id)
         courseName = request.POST['name']
         proID = request.POST['professor_id']
         start_date = request.POST['start_date']
@@ -164,3 +162,107 @@ def listUserSql(request):
         "data": rows
     }
     return render(request, 'admin_users.html', context)
+
+
+def listOneUserSql(request):
+    cursor = connection.cursor()
+    cursor.execute('select * from USER')
+    rows = cursor.fetchone()
+    print(rows)
+    context = {
+        "data": rows
+    }
+    return render(request, 'admin_updateUser.html', context)
+
+
+def adminUserCreate(request):
+    return render(request, 'admin_addUser.html')
+
+
+def adminUserAddProcess(request):
+    cursor = connection.cursor();
+    if request.method == 'POST':
+        userAccount = request.POST['account']
+        password = request.POST['password']
+        username = request.POST['username']
+        firstName = request.POST['first_name']
+        lastName = request.POST['last_name']
+        role = request.POST['role']
+        location = request.POST['location']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        major = request.POST['major']
+        sql = "INSERT INTO USER (useraccount, password, username, first_name, last_name, role, location, email, phone, login, major) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (userAccount, password, username, firstName, lastName, role, location, email, phone, False, major)
+        cursor.execute(sql, val)
+        mydb.commit()
+        return redirect(listUserSql)
+    else:
+        return redirect(listUserSql)
+
+
+def adminUserEdit(request, id):
+    cursor = connection.cursor();
+    cursor.execute(f'select * from `USER` where `user_id` = {id}')
+    row = cursor.fetchone()
+    context = {
+        "data": row
+    }
+    return render(request, "admin_updateUser.html", context)
+
+
+def adminUserUpdate(request, id):
+    cursor = connection.cursor();
+    if request.method == 'POST':
+        userAccount = request.POST['account']
+        password = request.POST['password']
+        username = request.POST['username']
+        firstName = request.POST['first_name']
+        lastName = request.POST['last_name']
+        role = request.POST['role']
+        location = request.POST['location']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        cursor.execute("""
+               UPDATE USER
+               SET useraccount=%s, password=%s, username=%s, first_name=%s, last_name=%s, role=%s, location=%s, email=%s, phone=%s
+               WHERE user_id=%s
+            """, (userAccount, password, username, firstName, lastName, role, location, email, phone, id))
+        mydb.commit()
+        return redirect(listUserSql)
+    else:
+        return redirect(listUserSql)
+
+
+def adminUserDeleteProcess(request, id):
+    cursor = connection.cursor()
+    cursor.execute(f'delete from `USER` where `user_id` = {id}')
+    mydb.commit()
+    return redirect(listUserSql)
+
+def listOneUserProfile(request):
+    cursor = connection.cursor()
+    cursor.execute('select * from `USER` where `login`=1')
+    rows = cursor.fetchone()
+    context = {
+        "data": rows
+    }
+    return render(request, 'admin_profile.html', context)
+
+def listOneUserProfileStudent(request):
+    cursor = connection.cursor()
+    cursor.execute('select * from `USER` where `login`=1')
+    rows = cursor.fetchone()
+    context = {
+        "data": rows
+    }
+    return render(request, 'profilePage.html', context)
+
+def listOneUserProfileAdvisor(request):
+    cursor = connection.cursor()
+    cursor.execute('select * from `USER` where `login`=1')
+    rows = cursor.fetchone()
+    context = {
+        "data": rows
+    }
+    return render(request, 'advisor_profile.html', context)
