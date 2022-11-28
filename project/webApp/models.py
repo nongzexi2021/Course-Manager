@@ -18,7 +18,7 @@ class Advisor(models.Model):
     role = models.CharField(max_length=50)
 
     class Meta:
-        #managed = False
+        # managed = False
         db_table = 'ADVISOR'
 
 
@@ -33,5 +33,19 @@ class Course(models.Model):
     credit = models.IntegerField()
 
     class Meta:
-        #managed = False
+        # managed = False
         db_table = 'COURSE'
+
+
+class StudentProfile(models.Model):
+    user_id = models.IntegerField(primary_key=True)
+    username = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    role = models.CharField(max_length=50)
+    location = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'USER'

@@ -249,14 +249,52 @@ def listOneUserProfile(request):
     }
     return render(request, 'admin_profile.html', context)
 
-def listOneUserProfileStudent(request):
+def list_student_profile(request):
+    # show the current profile data in the database
     cursor = connection.cursor()
-    cursor.execute('select * from `USER` where `login`=1')
+    cursor.execute(f'select * from `USER` where `login`= 1')
     rows = cursor.fetchone()
     context = {
         "data": rows
     }
     return render(request, 'profilePage.html', context)
+
+
+def update_student_profile(request, id):
+    # update profile data
+    cursor = connection.cursor()
+    if request.method == 'POST':
+        username = request.POST['username']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        role = request.POST['role']
+        location = request.POST['location']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        cursor.execute("""
+               UPDATE USER
+               SET username=%s, 
+               first_name=%s, 
+               last_name=%s, 
+               role=%s, 
+               location=%s, 
+               email=%s, 
+               phone=%s
+               WHERE user_id=%s
+            """,
+                       (username,
+                        first_name,
+                        last_name,
+                        role,
+                        location,
+                        email,
+                        phone, id))
+        mydb.commit()
+        return redirect(list_student_profile)
+    else:
+        return redirect(list_student_profile)
+
+
 
 def listOneUserProfileAdvisor(request):
     cursor = connection.cursor()

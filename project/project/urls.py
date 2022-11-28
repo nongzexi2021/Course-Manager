@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path
 from webApp import views
 
+
 urlpatterns = [
     #path("admin/", admin.site.urls),
     path('home', views.homePage),
     path('', views.loginPage),
-    path('profile', views.listOneUserProfileStudent),
+    path('profile', views.list_student_profile),
+    path('profile/<int:id>', views.update_student_profile),
     path('billing', views.billingPage),
     path('list', views.courseList),
     path('enroll', views.listAllCourseSql),
