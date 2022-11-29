@@ -14,8 +14,15 @@ mydb = mysql.connector.connect(
 
 
 def homePage(request):
-    return render(request, 'home.html')
-
+    # show the current student dashboard data from the database
+    cursor = connection.cursor()
+    cursor.execute(f'select * from `STUDENTS` where student_id=2020005')
+    student = cursor.fetchone()
+    context = {
+        "student": student
+    }
+    print(student)
+    return render(request, 'home.html', context)
 
 def loginPage(request):
     return render(request, 'loginPage.html')
