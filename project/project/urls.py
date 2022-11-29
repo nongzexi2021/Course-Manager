@@ -27,6 +27,7 @@ urlpatterns = [
     path('billing', views.billingPage),
     path('list', views.courseList),
     path('enroll', views.listAllCourseSql),
+    path('enroll/<int:id>', views.register_course),
     path('advisorList', views.listAdvisorSql),
     path('admin/course', views.adminCourse),
     path('admin/home', views.adminHome),

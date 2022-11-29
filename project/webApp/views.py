@@ -67,7 +67,13 @@ def adminUsers(request):
 
 
 def advisorStudents(request):
-    return render(request, 'advisor_students.html')
+    cursor = connection.cursor();
+    cursor.execute('select * from STUDENTS where advisor_id=400')
+    students = cursor.fetchall()
+    context = {
+        "students": students
+    }
+    return render(request, 'advisor_students.html', context)
 
 
 def advisorHome(request):
@@ -90,13 +96,26 @@ def listAdvisorSql(request):
 
 
 def listAllCourseSql(request):
-    cursor = connection.cursor();
+    cursor = connection.cursor()
     cursor.execute("select * from `COURSE`")
     rows = cursor.fetchall()
     context = {
         "data": rows
     }
     return render(request, 'enrollPage.html', context)
+
+
+def register_course(request, id):
+    cursor = connection.cursor()
+    try:
+        if request.method == 'POST':
+            cursor.execute(f'INSERT INTO COURSE_REGISTRATION (course_id, student_id) VALUES (%s, %s)', (id, 2020001))
+            mydb.commit()
+        return redirect(listAllCourseSql)
+    except:
+        # duplicate add
+        print(" *** ERROR! The course is already registered, invalid addition!")
+        return redirect(listAllCourseSql)
 
 
 def adminCourseCreate(request):
@@ -300,7 +319,6 @@ def update_student_profile(request, id):
         return redirect(list_student_profile)
     else:
         return redirect(list_student_profile)
-
 
 
 def listOneUserProfileAdvisor(request):

@@ -14,6 +14,7 @@
 {% include "advisor_navbar.html" %}
 
 <div class="container">
+
 <div class="row">
 	<div class="col-lg-12">
 		<div class="main-box clearfix">
@@ -21,86 +22,49 @@
 				<table class="table user-list">
 					<thead>
 						<tr>
-							<th><span>User</span></th>
-							<th><span>Created</span></th>
-							<th class="text-center"><span>Status</span></th>
-							<th><span>Email</span></th>
-							<th>&nbsp;</th>
+							<th><span>Student Name</span></th>
+							<th><span>Student Id</span></th>
+							<th><span>Student Major</span></th>
+							<th></th>
+							<th></th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>
-								<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
-								<a href="#" class="user-link">Mila Kunis</a>
-								<span class="user-subhead">Student</span>
-							</td>
-							<td>
-								2013/08/08
-							</td>
-							<td class="text-center">
-								<span class="label label-default">Inactive</span>
-							</td>
-							<td>
-								<a href="#">mila@kunis.com</a>
-							</td>
-							<td style="width: 20%;">
-								<a href="#" class="table-link">
-									<span class="fa-stack">
-										<i class="fa fa-square fa-stack-2x"></i>
-										<i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
-									</span>
-								</a>
-								<a href="#" class="table-link">
-									<span class="fa-stack">
-										<i class="fa fa-square fa-stack-2x"></i>
-										<i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-									</span>
-								</a>
-								<a href="#" class="table-link danger">
-									<span class="fa-stack">
-										<i class="fa fa-square fa-stack-2x"></i>
-										<i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-									</span>
-								</a>
-							</td>
-						</tr>
-						<tr>
+                        {% for student in students %}
+                            <tr>
 							<td>
 								<img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
-								<a href="#" class="user-link">George Clooney</a>
+								<a href="advisor_addClass.html" class="user-link">{{ student.1 }}</a>
 								<span class="user-subhead">Student</span>
 							</td>
+
 							<td>
-								2013/08/12
+								{{ student.0 }}
 							</td>
-							<td class="text-center">
-								<span class="label label-success">Active</span>
+                                <td>
+								{{ student.2 }}
 							</td>
-							<td>
-								<a href="#">marlon@brando.com</a>
-							</td>
-							<td style="width: 20%;">
-								<a href="#" class="table-link">
-									<span class="fa-stack">
-										<i class="fa fa-square fa-stack-2x"></i>
-										<i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
-									</span>
+                            <td>
+                                <a href="/" class="table-link">
+										Add class
 								</a>
-								<a href="#" class="table-link">
-									<span class="fa-stack">
-										<i class="fa fa-square fa-stack-2x"></i>
-										<i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-									</span>
+                            </td>
+                            <td>
+                                <a href="#" class="table-link">
+									Edit Profile
 								</a>
-								<a href="#" class="table-link danger">
+                            </td>
+                            <td>
+                                <a href="#" class="table-link danger">
 									<span class="fa-stack">
 										<i class="fa fa-square fa-stack-2x"></i>
 										<i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
 									</span>
 								</a>
-							</td>
+                            </td>
 						</tr>
+                        {% endfor %}
 					</tbody>
 				</table>
 			</div>
