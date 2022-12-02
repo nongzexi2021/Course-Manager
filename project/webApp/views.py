@@ -29,6 +29,12 @@ def homePage(request):
     return render(request, "home.html", context)
 
 
+def logout(request):
+    response = HttpResponseRedirect("")
+    response.delete_cookie("uniqueID")
+    return response
+
+
 def loginPage(request):
     return render(request, "loginPage.html")
 
