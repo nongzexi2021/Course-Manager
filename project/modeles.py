@@ -11,35 +11,6 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 
 
-class Advisor(models.Model):
-    employee_id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=50)
-    major = models.CharField(max_length=50)
-    email = models.CharField(max_length=50)
-    campus = models.CharField(max_length=50)
-    phone = models.CharField(max_length=50)
-    role = models.CharField(max_length=50)
-
-    class Meta:
-        # managed = False
-        db_table = "ADVISOR"
-
-
-class Course(models.Model):
-    course_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-    professor_id = models.IntegerField()
-    start_date = models.CharField(max_length=50)
-    duration = models.IntegerField()
-    room_id = models.IntegerField()
-    college_id = models.IntegerField()
-    credit = models.IntegerField()
-
-    class Meta:
-        # managed = False
-        db_table = "COURSE"
-
-
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -137,6 +108,30 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
 
+class Advisors(models.Model):
+    employee_id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        # managed = False
+        db_table = "ADVISORS"
+
+
+class Course(models.Model):
+    course_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    professor_id = models.IntegerField()
+    start_date = models.CharField(max_length=50)
+    duration = models.IntegerField()
+    room_id = models.IntegerField()
+    college_id = models.IntegerField()
+    credit = models.IntegerField()
+
+    class Meta:
+        # managed = False
+        db_table = "COURSE"
+
+
 class CourseRegistration(models.Model):
     course = models.OneToOneField(Course, models.DO_NOTHING, primary_key=True)
     student = models.ForeignKey("Students", models.DO_NOTHING)
@@ -145,15 +140,6 @@ class CourseRegistration(models.Model):
         # managed = False
         db_table = "COURSE_REGISTRATION"
         unique_together = (("course", "student"),)
-
-
-class Advisors(models.Model):
-    employee_id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=50)
-
-    class Meta:
-        # managed = False
-        db_table = "ADVISORS"
 
 
 class Students(models.Model):
@@ -171,11 +157,36 @@ class Students(models.Model):
         db_table = "STUDENTS"
 
 
+class User(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    username = models.CharField(unique=True, max_length=50)
+    password = models.CharField(max_length=255)
+    uniqueid = models.CharField(
+        db_column="uniqueID", unique=True, max_length=50
+    )  # Field name made lowercase.
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    role = models.CharField(max_length=50)
+    location = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50)
+    login = models.IntegerField(blank=True, null=True)
+    major = models.CharField(max_length=50)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_staff = models.IntegerField(blank=True, null=True)
+    is_superuser = models.IntegerField(blank=True, null=True)
+    is_active = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        # managed = False
+        db_table = "USER"
+
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "auth_group"
 
 
@@ -185,7 +196,7 @@ class AuthGroupPermissions(models.Model):
     permission = models.ForeignKey("AuthPermission", models.DO_NOTHING)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "auth_group_permissions"
         unique_together = (("group", "permission"),)
 
@@ -196,7 +207,7 @@ class AuthPermission(models.Model):
     codename = models.CharField(max_length=100)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "auth_permission"
         unique_together = (("content_type", "codename"),)
 
@@ -204,18 +215,17 @@ class AuthPermission(models.Model):
 class AuthUser(models.Model):
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.IntegerField()
     username = models.CharField(unique=True, max_length=150)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)
-    date_joined = models.DateTimeField()
-
-    is_superuser = models.IntegerField()
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
+    date_joined = models.DateTimeField()
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "auth_user"
 
 
@@ -225,7 +235,7 @@ class AuthUserGroups(models.Model):
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "auth_user_groups"
         unique_together = (("user", "group"),)
 
@@ -236,7 +246,7 @@ class AuthUserUserPermissions(models.Model):
     permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "auth_user_user_permissions"
         unique_together = (("user", "permission"),)
 
@@ -253,7 +263,7 @@ class DjangoAdminLog(models.Model):
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "django_admin_log"
 
 
@@ -262,7 +272,7 @@ class DjangoContentType(models.Model):
     model = models.CharField(max_length=100)
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "django_content_type"
         unique_together = (("app_label", "model"),)
 
@@ -274,7 +284,7 @@ class DjangoMigrations(models.Model):
     applied = models.DateTimeField()
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "django_migrations"
 
 
@@ -284,16 +294,5 @@ class DjangoSession(models.Model):
     expire_date = models.DateTimeField()
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = "django_session"
-
-
-class Register(models.Model):
-    username = models.CharField(primary_key=True, max_length=45)
-    password = models.CharField(max_length=45)
-
-    class Meta:
-        managed = False
-        db_table = "register"
-        unique_together = (("username", "password"),)
-        db_table = "COURSE"

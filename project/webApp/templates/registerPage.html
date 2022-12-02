@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login Page</title>
+
+    {% load static %}
+    <!--Bootsrap 4 CDN-->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+
+    <!--Fontawesome CDN-->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+      crossorigin="anonymous"
+    />
+
+    <!--Custom styles-->
+    <link rel="stylesheet" href="{% static 'login.css'%}" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="d-flex justify-content-center h-100">
+        <div class="card" style="height: 41rem">
+          <div class="card-header">
+            <h3>Register</h3>
+          </div>
+          <div class="card-body">
+            <form method="POST" action="registerUser" id="registerForm">
+              {%csrf_token%}
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="username"
+                  name="username"
+                />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-key"></i
+                  ></span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="password"
+                  name="password"
+                />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-envelope-open-text"></i
+                  ></span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="first name"
+                  name="first name"
+                />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-envelope-open-text"></i
+                  ></span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="last name"
+                  name="last name"
+                />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-envelope"></i
+                  ></span>
+                </div>
+                <input type="email" class="form-control" placeholder="email" name="email" />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-user-graduate"></i
+                  ></span>
+                </div>
+                <select name="role" id="allRoles" class="form-control">
+                  <option value="student">Student</option>
+                  <option value="admin">Admin</option>
+                  <option value="advisor">Advisor</option>
+                </select>
+              </div>
+
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-map"></i>
+                  </span>
+                </div>
+                <select name="location" id="allLocations" class="form-control">
+                  <option value="BayArea">Bay Area</option>
+                  <option value="Boston">Boston</option>
+                  <option value="Seattle">Seattle</option>
+                </select>
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-phone"></i>
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="phone"
+                  name="phone"
+                />
+              </div>
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-book"></i>
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="major"
+                  name="major"
+                />
+              </div>
+
+              <br/>
+
+              <div class="form-group">
+                <input
+                  type="submit"
+                  value="Sign up"
+                  class="btn float-right login_btn"
+                />
+              </div>
+
+              <div class="float-left links">
+                Have an Account?<a href={% url 'login' %}>Sign In</a>
+              </div> 
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
