@@ -87,6 +87,16 @@ def registerUser(request):
                 )
                 cursor = connection.cursor()
                 cursor.execute(sql, val)
+            elif role == "advisor":
+                name = first_name + " " + last_name
+                sql = "INSERT INTO ADVISORS (employee_id, name) " \
+                      "VALUES (%s, %s)"
+                val = (
+                    uniqueID,
+                    name,
+                )
+                cursor = connection.cursor()
+                cursor.execute(sql, val)
             User.objects.create_user(
                 username,
                 password,
@@ -176,16 +186,24 @@ def adminUsers(request):
     return render(request, "admin_users.html")
 
 
-def advisorStudents(request):
+def advisor_students(request):
     cursor = connection.cursor()
-    cursor.execute("select * from STUDENTS where advisor_id=400")
+    uniqueID = get_uniqueID(request)
+    if(uniqueID == None):
+        redirect("login")
+    cursor.execute(f"select * from STUDENTS where advisor_id={uniqueID}")
     students = cursor.fetchall()
     context = {"students": students}
     return render(request, "advisor_students.html", context)
 
 
-def advisorHome(request):
-    return render(request, "advisor_home.html")
+def advisor_home(request):
+    cursor = connection.cursor()
+    uniqueID = get_uniqueID(request)
+    cursor.execute(f"select * from USER where `uniqueID`={uniqueID}")
+    user = cursor.fetchone()
+    context = {"user": user}
+    return render(request, "advisor_home.html", context)
 
 
 def advisorProfile(request):
@@ -467,9 +485,47 @@ def update_student_profile(request):
         return redirect(list_student_profile)
 
 
-def listOneUserProfileAdvisor(request):
+def list_advisor_profile(request):
     cursor = connection.cursor()
-    cursor.execute("select * from `USER` where `login`=1")
+    uniqueID = get_uniqueID(request)
+    cursor.execute(f"select * from `USER` where uniqueID={uniqueID}")
     rows = cursor.fetchone()
     context = {"data": rows}
     return render(request, "advisor_profile.html", context)
+
+def update_advisor_profile(request):
+    # update profile data
+    uniqueID = request.COOKIES.get("uniqueID")
+    cursor = connection.cursor()
+    if request.method == "POST":
+        username = request.POST["username"]
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+        location = request.POST["location"]
+        email = request.POST["email"]
+        phone = request.POST["phone"]
+        cursor.execute(
+            """
+               UPDATE USER
+               SET username=%s, 
+               first_name=%s, 
+               last_name=%s, 
+               location=%s, 
+               email=%s, 
+               phone=%s
+               WHERE uniqueID=%s
+            """,
+            (username, first_name, last_name, location, email, phone, uniqueID),
+        )
+        name = first_name + " " + last_name
+        cursor.execute(
+        """
+           UPDATE ADVISORS
+           SET name=%s
+           WHERE employee_id=%s
+        """,
+        (name, uniqueID),)
+        mydb.commit()
+        return redirect(list_advisor_profile)
+    else:
+        return redirect(list_advisor_profile)
