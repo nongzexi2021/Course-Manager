@@ -17,18 +17,29 @@ mydb = mysql.connector.connect(
     host="35.197.108.217", user="root", password="nongzexi", database="group7"
 )
 
+def get_uniqueID(request):
+    uniqueID = request.COOKIES.get("uniqueID")
+    return uniqueID
+def get_user_role(request):
+    uniqueID = get_uniqueID(request)
+    cursor = connection.cursor()
+    cursor.execute(f"select * from `USER` where uniqueID={uniqueID}")
+    user = cursor.fetchone()
+    return user[6]
 
 def homePage(request):
     # show the current student dashboard data from the database
     uniqueID = request.COOKIES.get("uniqueID")
     cursor = connection.cursor()
-    cursor.execute(f"select * from `STUDENTS` where student_id={uniqueID}")
-    student = cursor.fetchone()
-    context = {"student": student}
-    print(student)
+    cursor.execute(f"select * from `USER` where uniqueID={uniqueID}")
+    user = cursor.fetchone()
+    if(user[6] == "student"):
+        cursor.execute(f"select * from `STUDENTS` where student_id={uniqueID}")
+        student = cursor.fetchone()
+        context = {"user": student}
+    else:
+        context = {"user": user}
     return render(request, "home.html", context)
-
-
 def logout(request):
     response = HttpResponseRedirect("")
     response.delete_cookie("uniqueID")
@@ -62,6 +73,20 @@ def registerUser(request):
 
     if username and password:
         try:
+            if role == "student":
+                name = first_name + " " + last_name
+                sql = "INSERT INTO STUDENTS (student_id, name, major, billing_balance, GPA, advisor_id) " \
+                      "VALUES (%s, %s, %s, %s, %s, %s)"
+                val = (
+                    uniqueID,
+                    name,
+                    major,
+                    0,
+                    None,
+                    400
+                )
+                cursor = connection.cursor()
+                cursor.execute(sql, val)
             User.objects.create_user(
                 username,
                 password,
@@ -178,7 +203,11 @@ def listAdvisorSql(request):
 
 def listAllCourseSql(request):
     cursor = connection.cursor()
-    cursor.execute("select * from `COURSE`")
+    student_id = get_uniqueID(request)
+    # left join and subquery
+    cursor.execute(f"select * from COURSE a left join "
+                   f"(select * from COURSE_REGISTRATION where student_id = {student_id}) b "
+                   f"on a.course_id=b.course_id")
     rows = cursor.fetchall()
     context = {"data": rows}
     return render(request, "enrollPage.html", context)
@@ -195,13 +224,13 @@ def deleteCourseList(request, courseid):
     return redirect("list")
 
 
-def register_course(request, id):
+def register_course(request, course_id):
     cursor = connection.cursor()
     try:
         if request.method == "POST":
             cursor.execute(
                 f"INSERT INTO COURSE_REGISTRATION (course_id, student_id) VALUES (%s, %s)",
-                (id, 2020001),
+                (course_id, get_uniqueID(request)),
             )
             mydb.commit()
         return redirect(listAllCourseSql)
@@ -390,22 +419,24 @@ def listOneUserProfile(request):
 
 
 def list_student_profile(request):
+    # get logged in Id
+    uniqueID = request.COOKIES.get("uniqueID")
     # show the current profile data in the database
     cursor = connection.cursor()
-    cursor.execute(f"select * from `USER` where `login`= 1")
+    cursor.execute(f"select * from `USER` where `uniqueID`= {uniqueID}")
     rows = cursor.fetchone()
     context = {"data": rows}
     return render(request, "profilePage.html", context)
 
 
-def update_student_profile(request, id):
+def update_student_profile(request):
     # update profile data
+    uniqueID = request.COOKIES.get("uniqueID")
     cursor = connection.cursor()
     if request.method == "POST":
         username = request.POST["username"]
         first_name = request.POST["first_name"]
         last_name = request.POST["last_name"]
-        role = request.POST["role"]
         location = request.POST["location"]
         email = request.POST["email"]
         phone = request.POST["phone"]
@@ -415,14 +446,21 @@ def update_student_profile(request, id):
                SET username=%s, 
                first_name=%s, 
                last_name=%s, 
-               role=%s, 
                location=%s, 
                email=%s, 
                phone=%s
-               WHERE user_id=%s
+               WHERE uniqueID=%s
             """,
-            (username, first_name, last_name, role, location, email, phone, id),
+            (username, first_name, last_name, location, email, phone, uniqueID),
         )
+        name = first_name + " " + last_name
+        cursor.execute(
+        """
+           UPDATE STUDENTS
+           SET name=%s
+           WHERE student_id=%s
+        """,
+        (name, uniqueID),)
         mydb.commit()
         return redirect(list_student_profile)
     else:

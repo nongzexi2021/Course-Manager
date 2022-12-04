@@ -38,7 +38,11 @@
                             <td class="text-truncate">Room number: {{class.5}}</td>
                             <td class="text-truncate">Credits: {{class.7}}</td>
                             <td class="candidate-list-favourite-time text-center">
-                              <button class="btn btn-primary" type="submit">Add</button>
+                                {% if class.8 == None %}
+                                    <button class="btn btn-primary" type="submit">Add {{ class.8}}</button>
+                                {% else %}
+                                    registered
+                                {% endif %}
                             </td>
                           </tr>
                       </form>
