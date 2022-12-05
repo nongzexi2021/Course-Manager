@@ -19,30 +19,30 @@
               <table class="table table-hover table-xl mb-0">
                 <thead>
                   <tr>
-                    <th>Course Name</th>
-                    <th>Course Id</th>
-                    <th>Start Date</th>
-                    <th>Duration</th>
-                    <th>Room</th>
-                    <th>Credit</th>
-                    <th>Add</th>
+                    <th class="text-center">Course Name</th>
+                    <th class="text-center">Course Id</th>
+                    <th class="text-center">Course Start Date</th>
+                    <th class="text-center">Course Duration Hour</th>
+                    <th class="text-center">Room Number</th>
+                    <th class="text-center">Credit</th>
+                    <th class="text-center">Add</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for class in data %}
                       <form method="POST" action="enroll/{{ class.0 }}" role="form">{% csrf_token %}
                           <tr>
-                            <td class="text-truncate">{{class.1}}</td>
-                            <td class="text-truncate">{{class.0}}</td>
-                            <td class="text-truncate">Start Date: {{class.3}} </td>
-                            <td class="text-truncate">Duration: {{class.4}} hours</td>
-                            <td class="text-truncate">Room number: {{class.5}}</td>
-                            <td class="text-truncate">Credits: {{class.7}}</td>
+                            <td class="text-truncate text-center">{{class.1}}</td>
+                            <td class="text-truncate text-center">{{class.0}}</td>
+                            <td class="text-truncate text-center">{{class.3}}</td>
+                            <td class="text-truncate text-center">{{class.4}}</td>
+                            <td class="text-truncate text-center">{{class.5}}</td>
+                            <td class="text-truncate text-center">{{class.7}}</td>
                             <td class="candidate-list-favourite-time text-center">
                                 {% if class.8 == None %}
                                     <button class="btn btn-primary" type="submit">Add</button>
                                 {% else %}
-                                    registered
+                                    Registered
                                 {% endif %}
                             </td>
                           </tr>

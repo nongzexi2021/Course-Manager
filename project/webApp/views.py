@@ -560,10 +560,12 @@ def update_student_profile(request):
         return redirect("login")
     uniqueID = request.COOKIES.get("uniqueID")
     cursor = connection.cursor()
+    print(request.POST["location"])
     if request.method == "POST":
         first_name = request.POST["first_name"]
         last_name = request.POST["last_name"]
         location = request.POST["location"]
+        print(location)
         email = request.POST["email"]
         phone = request.POST["phone"]
         cursor.execute(
