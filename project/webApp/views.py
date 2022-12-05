@@ -561,7 +561,6 @@ def update_student_profile(request):
     uniqueID = request.COOKIES.get("uniqueID")
     cursor = connection.cursor()
     if request.method == "POST":
-        username = request.POST["username"]
         first_name = request.POST["first_name"]
         last_name = request.POST["last_name"]
         location = request.POST["location"]
@@ -570,15 +569,14 @@ def update_student_profile(request):
         cursor.execute(
             """
                UPDATE USER
-               SET username=%s, 
-               first_name=%s, 
+               SET first_name=%s, 
                last_name=%s, 
                location=%s, 
                email=%s, 
                phone=%s
                WHERE uniqueID=%s
             """,
-            (username, first_name, last_name, location, email, phone, uniqueID),
+            ( first_name, last_name, location, email, phone, uniqueID),
         )
         name = first_name + " " + last_name
         cursor.execute(
@@ -611,7 +609,6 @@ def update_advisor_profile(request):
     uniqueID = request.COOKIES.get("uniqueID")
     cursor = connection.cursor()
     if request.method == "POST":
-        username = request.POST["username"]
         first_name = request.POST["first_name"]
         last_name = request.POST["last_name"]
         location = request.POST["location"]
@@ -620,15 +617,14 @@ def update_advisor_profile(request):
         cursor.execute(
             """
                UPDATE USER
-               SET username=%s, 
-               first_name=%s, 
+               SET first_name=%s, 
                last_name=%s, 
                location=%s, 
                email=%s, 
                phone=%s
                WHERE uniqueID=%s
             """,
-            (username, first_name, last_name, location, email, phone, uniqueID),
+            ( first_name, last_name, location, email, phone, uniqueID),
         )
         name = first_name + " " + last_name
         cursor.execute(
