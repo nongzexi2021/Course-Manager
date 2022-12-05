@@ -40,6 +40,8 @@ urlpatterns = [
     path("advisor/profile", views.list_advisor_profile),
     path("advisor/profile/update", views.update_advisor_profile),
     path("advisor/student", views.advisor_students),
+    path("advisor/student/edit_student/<int:student_id>", views.advisor_edit_student),
+    path("advisor/student/edit_student/save/<int:student_id>", views.advisor_save_student),
     path("advisor/home", views.advisor_home, name="advisor"),
     path("admin/create", views.adminCourseCreate),
     path("admin/inserted", views.adminCourseAddProcess),

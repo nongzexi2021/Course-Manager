@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block profile %}
+<head>
+
+	<title>Login Page</title>
+
+    {% load static %}
+	<!--Custom styles-->
+	<link rel="stylesheet" href="{% static 'profile.css'%}">
+</head>
+
+  {% include "advisor_navbar.html" %}
+
+<div class="container-xl px-4 mt-4">
+    <!-- Account page navigation-->
+    <nav class="nav nav-borders">
+        <a class="nav-link active ms-0" href="#" target="__blank">Student Information</a>
+    </nav>
+    <hr class="mt-0 mb-4">
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">{{ student.1 }} </div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <img class="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                    <!-- Profile picture upload button-->
+                    <button class="btn btn-primary" type="button">Upload new image</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Student</div>
+                <div class="card-body">
+                    <form method = "POST" action="save/{{ student.0 }}" class="form-horizontal" role="form">
+                        <!-- Form Group (username)-->
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="small mb-1" for="allLocations">Switch campus (current campus: {{ info.7 }})</label>
+                            <select name="location" id="allLocations" class="form-control" size="1">
+                              <option value="BayArea">Bay Area</option>
+                              <option value="Boston">Boston</option>
+                              <option value="Seattle">Seattle</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                             <label class="small mb-1" for="changeCreditLimit">Current Credit Limit: {{ student.6 }}</label>
+                             <input class="form-control" id="changeCreditLimit" type="text" name="creditLimit" placeholder="Change student credit limit to " value="{{student.6}}">
+                        </div>
+                        <!-- Save changes button-->
+                        <button class="btn btn-primary" type="submit">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

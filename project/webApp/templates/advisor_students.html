@@ -22,12 +22,10 @@
 				<table class="table user-list">
 					<thead>
 						<tr>
-							<th><span>Student Name</span></th>
-							<th><span>Student Id</span></th>
-							<th><span>Student Major</span></th>
-							<th></th>
-							<th></th>
-							<th></th>
+							<th>Student Name</th>
+							<th>Student Id</th>
+							<th>Student Major</th>
+							<th>Operation</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -35,7 +33,7 @@
                             <tr>
 							<td>
 								<img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
-								<a href="advisor_addClass.html" class="user-link">{{ student.1 }}</a>
+								<a href="#" class="user-link">{{ student.1 }}</a>
 								<span class="user-subhead">Student</span>
 							</td>
 
@@ -46,21 +44,8 @@
 								{{ student.2 }}
 							</td>
                             <td>
-                                <a href="/" class="table-link">
-										Add class
-								</a>
-                            </td>
-                            <td>
-                                <a href="#" class="table-link">
-									Edit Profile
-								</a>
-                            </td>
-                            <td>
-                                <a href="#" class="table-link danger">
-									<span class="fa-stack">
-										<i class="fa fa-square fa-stack-2x"></i>
-										<i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-									</span>
+                                <a href="student/edit_student/{{ student.0 }}" class="table-link">
+									Edit Student
 								</a>
                             </td>
 						</tr>

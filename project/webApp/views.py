@@ -51,7 +51,11 @@ def loginPage(request):
 
 
 def registerPage(request):
-    return render(request, "registerPage.html")
+    cursor = connection.cursor()
+    cursor.execute("select * from MAJOR")
+    rows = cursor.fetchall()
+    context = {"data": rows}
+    return render(request, "registerPage.html", context)
 
 
 def registerUser(request):
@@ -75,25 +79,27 @@ def registerUser(request):
         try:
             if role == "student":
                 name = first_name + " " + last_name
-                sql = "INSERT INTO STUDENTS (student_id, name, major, billing_balance, GPA, advisor_id) " \
-                      "VALUES (%s, %s, %s, %s, %s, %s)"
+                sql = "INSERT INTO STUDENTS (student_id, name, major, billing_balance, GPA, advisor_id, credit_limits) " \
+                      "VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 val = (
                     uniqueID,
                     name,
                     major,
                     0,
                     None,
-                    400
+                    400,
+                    9
                 )
                 cursor = connection.cursor()
                 cursor.execute(sql, val)
             elif role == "advisor":
                 name = first_name + " " + last_name
-                sql = "INSERT INTO ADVISORS (employee_id, name) " \
-                      "VALUES (%s, %s)"
+                sql = "INSERT INTO ADVISORS (employee_id, name, major_id) " \
+                      "VALUES (%s, %s, %s)"
                 val = (
                     uniqueID,
                     name,
+                    major,
                 )
                 cursor = connection.cursor()
                 cursor.execute(sql, val)
@@ -139,7 +145,7 @@ def checkLogin(request):
         response.set_cookie("uniqueID", id, max_age=12 * 3600)
         return response
     else:
-        print("login fail")
+        print("\n *** login fail -- user does not exist! *** \n")
         return redirect("login")
 
 
@@ -187,14 +193,47 @@ def adminUsers(request):
 
 
 def advisor_students(request):
+    if (get_user_role(request) != "advisor"):
+        return redirect("login")
     cursor = connection.cursor()
     uniqueID = get_uniqueID(request)
     if(uniqueID == None):
         redirect("login")
-    cursor.execute(f"select * from STUDENTS where advisor_id={uniqueID}")
+    cursor.execute(f"select * from STUDENTS where major=(select major_id from ADVISORS where employee_id = {uniqueID})")
     students = cursor.fetchall()
     context = {"students": students}
     return render(request, "advisor_students.html", context)
+
+
+def advisor_edit_student(request, student_id):
+    # get the selected student info
+    if (get_user_role(request) != "advisor"):
+        return redirect("login")
+    cursor = connection.cursor()
+    cursor.execute(f"select * from STUDENTS where student_id = {student_id}")
+    student = cursor.fetchone()
+
+    cursor.execute(f"select * from USER where uniqueID = {student_id}")
+    info = cursor.fetchone()
+
+    context = {"student": student, "info": info}
+    return render(request, "advisor_edit_student.html", context)
+
+
+def advisor_save_student(request, student_id):
+    if get_user_role(request) != "advisor":
+        return redirect("login")
+    cursor = connection.cursor()
+    if request.method == 'POST':
+        location = request.POST["location"]
+        credit_limit = request.POST["creditLimit"]
+        # save user location
+        _id = str(student_id)
+        cursor.execute("""UPDATE USER SET location=%s WHERE uniqueID=%s""", (location, _id),)
+        # save student credit limit
+        cursor.execute("""UPDATE STUDENTS SET credit_limits=%s WHERE student_id=%s """, (credit_limit, _id),)
+        mydb.commit()
+    return redirect(advisor_students)
 
 
 def advisor_home(request):
@@ -210,16 +249,21 @@ def advisorProfile(request):
     return render(request, "advisor_profile.html")
 
 
-# list all advisor
+# list all advisor for the current student
 def listAdvisorSql(request):
+    if(get_user_role(request) != "student"):
+        return redirect("login")
     cursor = connection.cursor()
-    cursor.execute('select * from USER where role="advisor"')
+    cursor.execute(f'select * from USER where role="advisor" and major='
+                   f'(select major from STUDENTS where student_id = {get_uniqueID(request)})')
     rows = cursor.fetchall()
     context = {"data": rows}
     return render(request, "advisorList.html", context)
 
 
 def listAllCourseSql(request):
+    if(get_user_role(request) != "student"):
+        return redirect("login")
     cursor = connection.cursor()
     student_id = get_uniqueID(request)
     # left join and subquery
@@ -227,7 +271,12 @@ def listAllCourseSql(request):
                    f"(select * from COURSE_REGISTRATION where student_id = {student_id}) b "
                    f"on a.course_id=b.course_id")
     rows = cursor.fetchall()
-    context = {"data": rows}
+
+    # get credit_limit for student
+    cursor.execute(f"select credit_limits from STUDENTS where student_id = {student_id}")
+    credit_limit = int(cursor.fetchone()[0])
+
+    context = {"data": rows, "credit_limit": credit_limit}
     return render(request, "enrollPage.html", context)
 
 
@@ -244,17 +293,42 @@ def deleteCourseList(request, courseid):
 
 def register_course(request, course_id):
     cursor = connection.cursor()
+    uniqueID = get_uniqueID(request)
     try:
+
         if request.method == "POST":
-            cursor.execute(
-                f"INSERT INTO COURSE_REGISTRATION (course_id, student_id) VALUES (%s, %s)",
-                (course_id, get_uniqueID(request)),
-            )
+            # get total credit for this student
+            cursor.execute(f"select tg.total from "
+                                   f"(select t.student_id, SUM(credit) total from "
+                                   f"(select cr.course_id, cr.student_id, c.credit from  COURSE_REGISTRATION cr "
+                                   f"left join COURSE c on cr.course_id = c.course_id) t "
+                                   f"group by t.student_id) tg "
+                                   f"where tg.student_id={uniqueID}")
+            temp = cursor.fetchone()
+            total_credit = 0
+            if temp != None:
+                total_credit = int(temp[0])
+
+            # get credits for the selected course
+            cursor.execute(f"select credit from COURSE where course_id={course_id}")
+            curr_course_credit = int(cursor.fetchone()[0])
+
+            # get the credit limits for each student
+            cursor.execute(f"select credit_limits from STUDENTS where student_id={uniqueID}")
+            temp = cursor.fetchone()
+            credit_limit = int(temp[0])
+            if(total_credit + curr_course_credit <= credit_limit):
+                cursor.execute(
+                    f"INSERT INTO COURSE_REGISTRATION (course_id, student_id) VALUES (%s, %s)",
+                    (course_id, uniqueID),
+                )
+            else:
+                print(" \n ****  [ERROR!] exceed credit limit for this semester! contact your advisor if need! *** \n")
             mydb.commit()
         return redirect(listAllCourseSql)
     except:
         # duplicate add
-        print(" *** ERROR! The course is already registered, invalid addition!")
+        print("\n *** [ERROR]! The course is already registered, invalid addition! ***\n")
         return redirect(listAllCourseSql)
 
 
@@ -437,6 +511,8 @@ def listOneUserProfile(request):
 
 
 def list_student_profile(request):
+    if(get_user_role(request) != "student"):
+        return redirect("login")
     # get logged in Id
     uniqueID = request.COOKIES.get("uniqueID")
     # show the current profile data in the database
@@ -449,6 +525,8 @@ def list_student_profile(request):
 
 def update_student_profile(request):
     # update profile data
+    if(get_user_role(request) != "student"):
+        return redirect("login")
     uniqueID = request.COOKIES.get("uniqueID")
     cursor = connection.cursor()
     if request.method == "POST":
@@ -486,6 +564,8 @@ def update_student_profile(request):
 
 
 def list_advisor_profile(request):
+    if(get_user_role(request) != "advisor"):
+        return redirect("login")
     cursor = connection.cursor()
     uniqueID = get_uniqueID(request)
     cursor.execute(f"select * from `USER` where uniqueID={uniqueID}")

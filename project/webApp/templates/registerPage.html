@@ -135,12 +135,11 @@
                     <i class="fas fa-book"></i>
                   </span>
                 </div>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="major"
-                  name="major"
-                />
+                  <select name="major" id="allMajors" class="form-control">
+                    {% for major in data %}
+                    <option value={{ major.0 }}>{{ major.0 }} - {{ major.1 }}</option>
+                    {% endfor %}
+                </select>
               </div>
 
               <br/>
