@@ -381,6 +381,7 @@ def adminCourseAddProcess(request):
 
 def adminCourseDeleteProcess(request, id):
     cursor = connection.cursor()
+    cursor.execute(f"delete from `COURSE_REGISTRATION` where `course_id` = {id}")
     cursor.execute(f"delete from `COURSE` where `course_id` = {id}")
     mydb.commit()
     return redirect(adminCourse)
