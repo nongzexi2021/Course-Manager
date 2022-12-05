@@ -203,8 +203,9 @@ def advisor_students(request):
     uniqueID = get_uniqueID(request)
     if uniqueID == None:
         redirect("login")
-    cursor.execute(
-        f"select * from STUDENTS where major=(select major_id from ADVISORS where employee_id = {uniqueID})"
+    cursor.execute(f"select * from MAJOR m left join "
+                   f"(select * from STUDENTS where major=(select major_id from ADVISORS where employee_id = {uniqueID})) stu "
+                   f"on m.major_id=stu.major where student_id is not null"
     )
     students = cursor.fetchall()
     context = {"students": students}
