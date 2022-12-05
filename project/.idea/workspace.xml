@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ba49a87-7d0c-447a-a5ea-7c3588058302" name="Changes" comment="1. change major name of student`s &quot;Contact Advisor page&quot;;&#10;2. add total credits to student`s &quot;My Class&quot; page;">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webApp/templates/advisor_navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/webApp/templates/advisor_navbar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webApp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/webApp/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
