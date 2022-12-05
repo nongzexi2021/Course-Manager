@@ -32,29 +32,51 @@
     <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="home">Dashboard</a>
+          <a {% if request.path == "/admin/home" %}
+          class="nav-link active"
+        {% else %}
+        class="nav-link" 
+        {% endif %}
+         aria-current="page" href="home">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="course">Course Management System</a>
+          <a {% if request.path == "/admin/course" %}
+          class="nav-link active"
+        {% else %}
+        class="nav-link" 
+        {% endif %} href="course">Course Management System</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="profile">Profile</a>
+          <a {% if request.path == "/admin/profile" %}
+          class="nav-link active"
+        {% else %}
+        class="nav-link" 
+        {% endif %} href="profile">Profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="users">Users Management System</a>
+          <a {% if request.path == "/admin/users" %}
+          class="nav-link active"
+        {% else %}
+        class="nav-link" 
+        {% endif %} href="users">Users Management System</a>
         </li>
-        <li class="nav-item dropdown">
+        <!-- no Settings -->
+        <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Action</a></li>
             <li><a class="dropdown-item" href="#">Another action</a></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-        </li>
+        </li> -->
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      <form class="d-flex" method="POST" action="/logout">
+        {%csrf_token%}
+        <input
+          type="submit"
+          value="Log out"
+          class="btn btn-outline-success"
+        />
       </form>
     </div>
   </div>

@@ -25,6 +25,7 @@ urlpatterns = [
     path("register", views.registerPage, name="register123"),  # register page
     path("registerUser", views.registerUser),  # add a user into db
     path("checkLogin", views.checkLogin),  # check_login
+    path("logout", views.logout, name="logout"),  # check_login
     path("deletecourse/<int:courseid>", views.deleteCourseList),  # check_login
     # path("api/token", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     # path("api/token/refresh", TokenRefreshView.as_view(), name="token_refresh"),
@@ -41,7 +42,9 @@ urlpatterns = [
     path("advisor/profile/update", views.update_advisor_profile),
     path("advisor/student", views.advisor_students),
     path("advisor/student/edit_student/<int:student_id>", views.advisor_edit_student),
-    path("advisor/student/edit_student/save/<int:student_id>", views.advisor_save_student),
+    path(
+        "advisor/student/edit_student/save/<int:student_id>", views.advisor_save_student
+    ),
     path("advisor/home", views.advisor_home, name="advisor"),
     path("admin/create", views.adminCourseCreate),
     path("admin/inserted", views.adminCourseAddProcess),
