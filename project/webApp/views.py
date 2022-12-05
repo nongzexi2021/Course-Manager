@@ -163,10 +163,12 @@ def courseList(request):
     id = (int)(request.COOKIES.get("uniqueID"))
     allCourse = CourseRegistration.objects.filter(student_id=id)
     res = []
+    count_credits = 0
     for o in allCourse:
         c = Course.objects.get(course_id=o.course_id)
         res.append(c)
-    context = {"allCourse": res}
+        count_credits += c.credit
+    context = {"allCourse": res, "total_credits": count_credits}
     return render(request, "courseList.html", context)
 
 
@@ -265,8 +267,11 @@ def listAdvisorSql(request):
         return redirect("login")
     cursor = connection.cursor()
     cursor.execute(
-        f'select * from USER where role="advisor" and major='
-        f"(select major from STUDENTS where student_id = {get_uniqueID(request)})"
+        f' select * from '
+        f'( select u.uniqueID, u.username, u.first_name, u.last_name, u.role, u.location, u.email, m.major_id, m.major_name, u.phone '
+        f'from USER u left join MAJOR m on u.major = m.major_id) t  '
+        f'where t.role="advisor" and t.major_id='
+        f'(select major from STUDENTS where student_id ={get_uniqueID(request)})'
     )
     rows = cursor.fetchall()
     context = {"data": rows}

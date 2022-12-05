@@ -24,6 +24,8 @@
             <thead>
               <tr>
                 <th>Course Name</th>
+                <th class="text-center">Course ID</th>
+                <th class="text-center">Credits</th>
                 <th class="text-center">Status</th>
                 <th class="action text-right">Action</th>
               </tr>
@@ -56,6 +58,14 @@
                     </div>
                   </div>
                 </td>
+
+                  <td class="candidate-list-favourite-time text-center">
+                  <span class="candidate-list-time order-1">{{ course.course_id }}</span>
+                 </td>
+                  <td class="candidate-list-favourite-time text-center">
+                  <span class="candidate-list-time order-1">{{ course.credit }}</span>
+                 </td>
+
                 <td class="candidate-list-favourite-time text-center">
                   <a
                     class="candidate-list-favourite order-2 text-danger"
@@ -83,6 +93,9 @@
               {% endfor %}
             </tbody>
           </table>
+          <div class="text-right mt-3" >
+              total registered credits: {{ total_credits }}
+          </div>
         </div>
       </div>
     </div>
