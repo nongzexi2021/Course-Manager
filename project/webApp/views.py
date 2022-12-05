@@ -535,7 +535,7 @@ def adminUserDeleteProcess(request, id):
 
 def listOneUserProfile(request):
     cursor = connection.cursor()
-    cursor.execute("select * from `USER` where `login`=1")
+    cursor.execute(f'select * from `USER` where `uniqueID`={get_uniqueID(request)}')
     rows = cursor.fetchone()
     context = {"data": rows}
     return render(request, "admin_profile.html", context)
@@ -643,3 +643,31 @@ def update_advisor_profile(request):
         return redirect(list_advisor_profile)
     else:
         return redirect(list_advisor_profile)
+
+def update_admin_profile(request):
+    # update profile data
+    uniqueID = request.COOKIES.get("uniqueID")
+    cursor = connection.cursor()
+    print(request)
+    if request.method == "POST":
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+        location = request.POST["location"]
+        email = request.POST["email"]
+        phone = request.POST["phone"]
+        cursor.execute(
+            """
+               UPDATE USER
+               SET first_name=%s, 
+               last_name=%s, 
+               location=%s, 
+               email=%s, 
+               phone=%s
+               WHERE uniqueID=%s
+            """,
+            (first_name, last_name, location, email, phone, uniqueID),
+        )
+        mydb.commit()
+        return redirect(adminHome)
+    else:
+        return redirect(adminHome)

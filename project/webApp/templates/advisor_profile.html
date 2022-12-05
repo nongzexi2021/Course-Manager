@@ -41,10 +41,6 @@
                     <form method = "POST" action="profile/update" class="form-horizontal" role="form">
                         <!-- Form Group (username)-->
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="small mb-1" for="inputUsername">Username (how your name will appear to other users on the site)</label>
-                            <input class="form-control" id="inputUsername" type="text" name="username" value="{{data.1}}">
-                        </div>
                         <!-- Form Row-->
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (first name)-->

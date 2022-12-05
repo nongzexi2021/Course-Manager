@@ -58,4 +58,5 @@ urlpatterns = [
     path("admin/users/update/<int:id>", views.adminUserUpdate),
     path("admin/users/delete/<int:id>", views.adminUserDeleteProcess),
     path("admin/profile", views.listOneUserProfile),
+    path("admin/profile/update", views.update_admin_profile),
 ]
