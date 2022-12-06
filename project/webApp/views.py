@@ -202,7 +202,33 @@ def adminCourse(request):
 
 
 def adminHome(request):
-    return render(request, "admin_home.html")
+    uniqueID = request.COOKIES.get("uniqueID")
+    cursor = connection.cursor()
+    cursor.execute(
+        f"SELECT major\
+              FROM USER\
+              WHERE uniqueID = {uniqueID};"
+    )
+    major = cursor.fetchone()[0]
+
+    cursor.execute(
+        f"SELECT location\
+              FROM USER\
+              WHERE uniqueID = {uniqueID};"
+    )
+    location = cursor.fetchone()[0]
+    cursor.execute(
+        f"SELECT first_name, last_name, uniqueID, COUNT(*) AS num\
+                FROM USER\
+                INNER JOIN COURSE_REGISTRATION\
+                ON USER.uniqueID = COURSE_REGISTRATION.student_id\
+                WHERE major = '{major}' AND location = '{location}'\
+                GROUP BY uniqueID\
+                HAVING num < 2;"
+    )
+    students = cursor.fetchall()
+    context = {"creditLessThanEight": students}
+    return render(request, "admin_home.html", context)
 
 
 def adminProfile(request):
