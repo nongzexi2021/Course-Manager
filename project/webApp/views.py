@@ -45,10 +45,13 @@ def homePage(request):
         context = {"user": user}
 
     def favouriteCourse(cursor, limit):
+
         cursor.execute(
-            f"SELECT course_id, COUNT(course_id) AS num\
-                        FROM group7.COURSE_REGISTRATION\
-                        GROUP BY course_id\
+            f"SELECT COURSE_REGISTRATION.course_id, COUNT(COURSE_REGISTRATION.course_id) AS num, COURSE.name\
+                        FROM COURSE_REGISTRATION\
+                        INNER JOIN COURSE\
+                        ON COURSE_REGISTRATION.course_id = COURSE.course_id\
+                        GROUP BY COURSE_REGISTRATION.course_id\
                         ORDER BY num DESC\
                         LIMIT {limit};"
         )
@@ -222,7 +225,7 @@ def adminHome(request):
                 FROM USER\
                 INNER JOIN COURSE_REGISTRATION\
                 ON USER.uniqueID = COURSE_REGISTRATION.student_id\
-                WHERE major = '{major}' AND location = '{location}'\
+                WHERE major = '{major}'\
                 GROUP BY uniqueID\
                 HAVING num < 2;"
     )
