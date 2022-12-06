@@ -54,60 +54,54 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Role</label>
                     <div class="col-lg-8">
-                        <select name="role" id="allLocations" class="form-control" size="1">
-                            <option value="admin"
-                                    {% if data.6==
-                            "admin" %}
-                            selected
-                            {% endif %}/>
-                            admin
-                            </option>
+                         <select name="role" id="allLocations" class="form-control" size="1">
+                                    <option value="admin"
+                                          {% if data.6 == "admin" %}
+                                            selected
+                                          {% endif %}/>
+                                    admin
+                                    </option>
 
-                            <option value="advisor"
-                                    {% if data.6==
-                            "advisor" %}
-                            selected
-                            {% endif %}/>
-                            advisor
-                            </option>
+                                    <option value="advisor"
+                                              {% if data.6 == "advisor" %}
+                                                selected
+                                              {% endif %}/>
+                                        advisor
+                                    </option>
 
-                            <option value="student"
-                                    {% if data.6==
-                            "student" %}
-                            {% endif %}/>
-                            student
-                            </option>
-                        </select>
+                                    <option value="student"
+                                              {% if data.6 == "student" %}
+                                              {% endif %}/>
+                                        student
+                                    </option>
+                                </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Location: </label>
                     <div class="col-lg-8">
-                        <select name="location" id="allLocations" class="form-control" size="1">
-                            <option value="BayArea"
-                                    {% if data.7==
-                            "BayArea" %}
-                            selected
-                            {% endif %}/>
-                            BayArea
-                            </option>
+                                                        <select name="location" id="allLocations" class="form-control" size="1">
+                                    <option value="BayArea"
+                                          {% if data.7 == "BayArea" %}
+                                            selected
+                                          {% endif %}/>
+                                    BayArea
+                                    </option>
 
-                            <option value="Boston"
-                                    {% if data.7==
-                            "Boston" %}
-                            selected
-                            {% endif %}/>
-                            Boston
-                            </option>
+                                    <option value="Boston"
+                                              {% if data.7 == "Boston" %}
+                                                selected
+                                              {% endif %}/>
+                                        Boston
+                                    </option>
 
-                            <option value="Seattle"
-                                    {% if data.7==
-                            "Seattle" %}
-                            selected
-                            {% endif %}/>
-                            Seattle
-                            </option>
-                        </select>
+                                    <option value="Seattle"
+                                              {% if data.7 == "Seattle" %}
+                                                selected
+                                              {% endif %}/>
+                                        Seattle
+                                    </option>
+                                </select>
                     </div>
                 </div>
                 <div class="form-group">
