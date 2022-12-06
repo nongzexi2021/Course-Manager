@@ -42,12 +42,28 @@
                         <!-- Form Group (username)-->
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label class="small mb-1" for="allLocations">Switch campus (current campus: {{ info.7 }})</label>
+                            <label class="small mb-1" for="allLocations">Switch campus(current campus: {{ info.7 }})</label>
                             <select name="location" id="allLocations" class="form-control" size="1">
-                              <option value="none" selected disabled hidden>Select an Option</option>
-                              <option value="BayArea">Bay Area</option>
-                              <option value="Boston">Boston</option>
-                              <option value="Seattle">Seattle</option>
+                              <option value="BayArea"
+                                      {% if info.7 == "BayArea" %}
+                                        selected
+                                      {% endif %}/>
+                                BayArea
+                                </option>
+
+                            <option value="Boston"
+                                      {% if info.7 == "Boston" %}
+                                        selected
+                                      {% endif %}/>
+                                Boston
+                                </option>
+
+                            <option value="Seattle"
+                                      {% if info.7 == "Seattle" %}
+                                        selected
+                                      {% endif %}/>
+                                Seattle
+                                </option>
                             </select>
                         </div>
                         <div class="mb-3">
