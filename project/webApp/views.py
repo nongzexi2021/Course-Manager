@@ -494,7 +494,6 @@ def adminUserUpdate(request, id):
     if request.method == "POST":
         userAccount = request.POST["account"]
         password = request.POST["password"]
-        username = request.POST["username"]
         firstName = request.POST["first_name"]
         lastName = request.POST["last_name"]
         role = request.POST["role"]
@@ -504,13 +503,12 @@ def adminUserUpdate(request, id):
         cursor.execute(
             """
                UPDATE USER
-               SET useraccount=%s, password=%s, username=%s, first_name=%s, last_name=%s, role=%s, location=%s, email=%s, phone=%s
+               SET username=%s, password=%s, first_name=%s, last_name=%s, role=%s, location=%s, email=%s, phone=%s
                WHERE user_id=%s
             """,
             (
                 userAccount,
                 password,
-                username,
                 firstName,
                 lastName,
                 role,
