@@ -43,6 +43,23 @@ def homePage(request):
         context = {"user": student}
     else:
         context = {"user": user}
+
+    def favouriteCourse(cursor, limit):
+        cursor.execute(
+            f"SELECT course_id, COUNT(course_id) AS num\
+                        FROM group7.COURSE_REGISTRATION\
+                        GROUP BY course_id\
+                        ORDER BY num DESC\
+                        LIMIT {limit};"
+        )
+        courses = cursor.fetchall()
+        return courses
+
+    top3Courses = favouriteCourse(cursor, 3)
+    context["top"] = top3Courses
+
+    cursor.close()
+
     return render(request, "home.html", context)
 
 
@@ -203,9 +220,10 @@ def advisor_students(request):
     uniqueID = get_uniqueID(request)
     if uniqueID == None:
         redirect("login")
-    cursor.execute(f"select * from MAJOR m left join "
-                   f"(select * from STUDENTS where major=(select major_id from ADVISORS where employee_id = {uniqueID})) stu "
-                   f"on m.major_id=stu.major where student_id is not null"
+    cursor.execute(
+        f"select * from MAJOR m left join "
+        f"(select * from STUDENTS where major=(select major_id from ADVISORS where employee_id = {uniqueID})) stu "
+        f"on m.major_id=stu.major where student_id is not null"
     )
     students = cursor.fetchall()
     context = {"students": students}
@@ -249,12 +267,46 @@ def advisor_save_student(request, student_id):
     return redirect(advisor_students)
 
 
+def creditLessThanEight(employee_id, uniqueID, cursor):
+    cursor.execute(
+        f"SELECT major_id\
+              FROM ADVISORS\
+              WHERE employee_id = {employee_id};"
+    )
+    major_id = cursor.fetchone()[0]
+
+    cursor.execute(
+        f"SELECT location\
+              FROM USER\
+              WHERE uniqueID = {uniqueID};"
+    )
+    location = cursor.fetchone()[0]
+    cursor.execute(
+        f"SELECT first_name, last_name, uniqueID, COUNT(*) AS num\
+                FROM USER\
+                INNER JOIN COURSE_REGISTRATION\
+                ON USER.uniqueID = COURSE_REGISTRATION.student_id\
+                WHERE major = '{major_id}' AND location = '{location}'\
+                GROUP BY uniqueID\
+                HAVING num < 2;"
+    )
+    students = cursor.fetchall()
+    return students
+
+
 def advisor_home(request):
     cursor = connection.cursor()
     uniqueID = get_uniqueID(request)
     cursor.execute(f"select * from USER where `uniqueID`={uniqueID}")
     user = cursor.fetchone()
     context = {"user": user}
+
+    employee_id = (int)(request.COOKIES.get("uniqueID"))
+    uniqueID = request.COOKIES.get("uniqueID")
+
+    students = creditLessThanEight(employee_id, uniqueID, cursor)
+    context["creditLessThanEight"] = students
+
     return render(request, "advisor_home.html", context)
 
 
@@ -268,11 +320,11 @@ def listAdvisorSql(request):
         return redirect("login")
     cursor = connection.cursor()
     cursor.execute(
-        f' select * from '
-        f'( select u.uniqueID, u.username, u.first_name, u.last_name, u.role, u.location, u.email, m.major_id, m.major_name, u.phone '
-        f'from USER u left join MAJOR m on u.major = m.major_id) t  '
+        f" select * from "
+        f"( select u.uniqueID, u.username, u.first_name, u.last_name, u.role, u.location, u.email, m.major_id, m.major_name, u.phone "
+        f"from USER u left join MAJOR m on u.major = m.major_id) t  "
         f'where t.role="advisor" and t.major_id='
-        f'(select major from STUDENTS where student_id ={get_uniqueID(request)})'
+        f"(select major from STUDENTS where student_id ={get_uniqueID(request)})"
     )
     rows = cursor.fetchall()
     context = {"data": rows}
@@ -494,6 +546,7 @@ def adminUserUpdate(request, id):
     if request.method == "POST":
         userAccount = request.POST["account"]
         password = request.POST["password"]
+        username = request.POST["username"]
         firstName = request.POST["first_name"]
         lastName = request.POST["last_name"]
         role = request.POST["role"]
@@ -503,12 +556,13 @@ def adminUserUpdate(request, id):
         cursor.execute(
             """
                UPDATE USER
-               SET username=%s, password=%s, first_name=%s, last_name=%s, role=%s, location=%s, email=%s, phone=%s
+               SET useraccount=%s, password=%s, username=%s, first_name=%s, last_name=%s, role=%s, location=%s, email=%s, phone=%s
                WHERE user_id=%s
             """,
             (
                 userAccount,
                 password,
+                username,
                 firstName,
                 lastName,
                 role,
@@ -533,7 +587,7 @@ def adminUserDeleteProcess(request, id):
 
 def listOneUserProfile(request):
     cursor = connection.cursor()
-    cursor.execute(f'select * from `USER` where `uniqueID`={get_uniqueID(request)}')
+    cursor.execute(f"select * from `USER` where `uniqueID`={get_uniqueID(request)}")
     rows = cursor.fetchone()
     context = {"data": rows}
     return render(request, "admin_profile.html", context)
@@ -574,7 +628,7 @@ def update_student_profile(request):
                phone=%s
                WHERE uniqueID=%s
             """,
-            ( first_name, last_name, location, email, phone, uniqueID),
+            (first_name, last_name, location, email, phone, uniqueID),
         )
         name = first_name + " " + last_name
         cursor.execute(
@@ -622,7 +676,7 @@ def update_advisor_profile(request):
                phone=%s
                WHERE uniqueID=%s
             """,
-            ( first_name, last_name, location, email, phone, uniqueID),
+            (first_name, last_name, location, email, phone, uniqueID),
         )
         name = first_name + " " + last_name
         cursor.execute(
@@ -637,6 +691,7 @@ def update_advisor_profile(request):
         return redirect(list_advisor_profile)
     else:
         return redirect(list_advisor_profile)
+
 
 def update_admin_profile(request):
     # update profile data
