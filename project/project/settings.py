@@ -77,16 +77,31 @@ WSGI_APPLICATION = "project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "group7",
-        "USER": "root",
-        "PASSWORD": "nongzexi",
-        "HOST": "35.197.108.217",
-        "PORT": "3306",
+import pymysql  # noqa: 402
+pymysql.version_info = (1, 4, 6, 'final', 0)  # change mysqlclient version
+pymysql.install_as_MySQLdb()
+# [START db_setup]
+if os.getenv('GAE_APPLICATION', None):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': '/cloudsql/database-001524046:us-west1:neu-test-db',
+            'USER': 'root',
+            'PASSWORD': 'nongzexi',
+            'NAME': 'group7',
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "group7",
+            "USER": "root",
+            "PASSWORD": "nongzexi",
+            "HOST": "35.197.108.217",
+            "PORT": "3306",
+        }
+    }
 
 
 # Password validation
@@ -123,6 +138,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+STATIC_ROOT = 'static'
 STATIC_URL = "static/"
 
 # Default primary key field type

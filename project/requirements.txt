@@ -3,3 +3,5 @@ PyMySQL==1.0.2
 django-bootstrap-v5
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
+mysql~=0.0.3
+mysql-connector-python~=8.0.31
